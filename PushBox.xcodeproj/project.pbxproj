@@ -13,6 +13,7 @@
 		B4039A4827D49D8F00844A2D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B4039A4627D49D8F00844A2D /* Main.storyboard */; };
 		B4039A4A27D49D9100844A2D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B4039A4927D49D9100844A2D /* Assets.xcassets */; };
 		B4039A4D27D49D9100844A2D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B4039A4B27D49D9100844A2D /* LaunchScreen.storyboard */; };
+		B4DBD49227D5B37300AE6F6C /* MapManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DBD49127D5B37300AE6F6C /* MapManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		B4039A4927D49D9100844A2D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B4039A4C27D49D9100844A2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B4039A4E27D49D9100844A2D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B4DBD49127D5B37300AE6F6C /* MapManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				B4039A4027D49D8F00844A2D /* AppDelegate.swift */,
 				B4039A4227D49D8F00844A2D /* SceneDelegate.swift */,
 				B4039A4427D49D8F00844A2D /* ViewController.swift */,
+				B4DBD49127D5B37300AE6F6C /* MapManager.swift */,
 				B4039A4627D49D8F00844A2D /* Main.storyboard */,
 				B4039A4927D49D9100844A2D /* Assets.xcassets */,
 				B4039A4B27D49D9100844A2D /* LaunchScreen.storyboard */,
@@ -139,6 +142,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B4DBD49227D5B37300AE6F6C /* MapManager.swift in Sources */,
 				B4039A4527D49D8F00844A2D /* ViewController.swift in Sources */,
 				B4039A4127D49D8F00844A2D /* AppDelegate.swift in Sources */,
 				B4039A4327D49D8F00844A2D /* SceneDelegate.swift in Sources */,

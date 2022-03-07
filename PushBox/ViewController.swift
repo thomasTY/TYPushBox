@@ -18,7 +18,6 @@ class ViewController: UIViewController {
     let container = UIView() // 地图容器视图
     let titleLabel: UILabel = { // 标题
         let label = UILabel()
-        label.text = "推箱子 v0.1"
         label.textColor = .black
         label.font = .systemFont(ofSize: 20.0, weight: .medium)
         label.textAlignment = .center
@@ -64,6 +63,24 @@ class ViewController: UIViewController {
         button.addTarget(self, action: #selector(reset), for: .touchUpInside)
         return button
     }()
+    let lastLevelButton:UIButton = { // 上一关按钮
+        let button = UIButton()
+        button.setTitle("上一关", for: .normal)
+        button.setTitleColor(UIColor.black, for: .normal)
+        button.setTitleColor(UIColor.gray, for: .disabled)
+        button.titleLabel?.font = .systemFont(ofSize: 13.0, weight: .regular)
+        button.addTarget(self, action: #selector(lastLevel), for: .touchUpInside)
+        return button
+    }()
+    let nextLevelButton:UIButton = { // 下一关按钮
+        let button = UIButton()
+        button.setTitle("下一关", for: .normal)
+        button.setTitleColor(UIColor.black, for: .normal)
+        button.setTitleColor(UIColor.gray, for: .disabled)
+        button.titleLabel?.font = .systemFont(ofSize: 13.0, weight: .regular)
+        button.addTarget(self, action: #selector(nextLevel), for: .touchUpInside)
+        return button
+    }()
     let hero:UIView = { // 玩家视图
         let view = UIImageView()
         view.image = UIImage(named: "human")
@@ -92,16 +109,8 @@ class ViewController: UIViewController {
     var boxY:Int = 0 // 箱子当前y下标
     var exitX:Int = 0 // 终点x下标
     var exitY:Int = 0 // 终点y下标
-    var map = [["1","1","1","1","1","1","1","1","1","1"],
-               ["1","0","1","1"," "," ","1","1"," ","1"],
-               ["1"," "," "," "," "," "," "," "," ","1"],
-               ["1"," ","1"," "," ","1","1"," ","1"," "],
-               ["1"," "," "," ","1"," ","1"," ","1"," "],
-               ["1","1"," "," ","1"," "," ","1"," ","1"],
-               ["1"," ","1"," ","1","1"," "," "," ","1"],
-               ["1"," "," "," ","1"," ","X"," "," "," "],
-               ["1","1"," "," "," "," ","1"," "," "," "],
-               ["1","1","1","1","1","1","1","1","1","E"],] // 游戏地图
+    let mapManager = MapManager()
+    var map = [[String]]() // 当前地图
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -109,8 +118,12 @@ class ViewController: UIViewController {
     }
     // 加载UI界面
     func setupUI() {
-        itemW = w / CGFloat(Float(line))
-        let y = (h - w) / 2.0 - 20
+        itemW = w / CGFloat(Float(line)) // 根据屏幕宽度，计算单个墙视图的平均宽度
+        let y = (h - w) / 2.0 - 20 // 地图的y
+        map = mapManager.currentMap() // 获取当前地图
+        titleLabel.text = "推箱子-第\(mapManager.currentIndex+1)关"
+        lastLevelButton.isEnabled = mapManager.currentIndex > 0
+        nextLevelButton.isEnabled = mapManager.currentIndex+1 < mapManager.count
         container.frame = CGRect(x: 0, y: y, width: w, height: w)
         view.addSubview(container)
         intPanel()
@@ -119,29 +132,44 @@ class ViewController: UIViewController {
     }
     // 配色
     func themeColor() {
+        view.backgroundColor = UIColor.white
         titleLabel.backgroundColor = bgColor
         container.backgroundColor = bgColor
         resetButton.backgroundColor = bgColor
+        lastLevelButton.backgroundColor = bgColor
+        nextLevelButton.backgroundColor = bgColor
     }
     // 初始化控制面板
     func intPanel () {
-        let x = (w - 150) / 2.0
-        let y = (h - w) / 2.0 - 90
-        let halfBW = bottonW / 2.0
-        let bX = w / 2.0
-        let bY = h - bottonW - halfBW
+        let x = (w - 150) / 2.0 // 标题的x
+        let y = (h - w) / 2.0 - 90 // 标题的y
+        let halfBW = bottonW / 2.0 // 按钮的一半宽度
+        let bX = w / 2.0 // 布局按钮的中心点x
+        let bY = ((h - w) / 2.0 - 20) + w + bottonW + halfBW + 10 // 布局按钮的中心点y, 根据container的位置来计算
+        // 标题
         titleLabel.frame = CGRect(x: x, y: y, width: 150, height: 50)
         view.addSubview(titleLabel)
+        // 向上按钮
         upButton.frame = CGRect(x: bX-halfBW , y: bY-halfBW-bottonW, width: bottonW, height: bottonW)
         view.addSubview(upButton)
+        // 向下按钮
         downButton.frame = CGRect(x: bX-halfBW, y: bY+halfBW, width: bottonW, height: bottonW)
         view.addSubview(downButton)
+        // 向左按钮
         leftButton.frame = CGRect(x: bX-halfBW-bottonW, y: bY-halfBW, width: bottonW, height: bottonW)
         view.addSubview(leftButton)
+        // 向右按钮
         rightButton.frame = CGRect(x: bX+halfBW, y: bY-halfBW, width: bottonW, height: bottonW)
         view.addSubview(rightButton)
-        resetButton.frame = CGRect(x: w-55, y: bY-halfBW, width: 50, height: 45)
+        // 重置按钮
+        resetButton.frame = CGRect(x: 10, y: bY-halfBW, width: 50, height: 45)
         view.addSubview(resetButton)
+        // 上一关 按钮
+        lastLevelButton.frame = CGRect(x: w-70, y: bY-bottonW-5, width: 60, height: 40)
+        view.addSubview(lastLevelButton)
+        // 下一关 按钮
+        nextLevelButton.frame = CGRect(x: w-70, y: bY+5, width: 60, height: 40)
+        view.addSubview(nextLevelButton)
     }
     // 初始化地图
     func initMap(map: [[String]]) {
@@ -233,6 +261,31 @@ class ViewController: UIViewController {
         updateBoxFrame(xIndex: boxBeginX, yIndex: boxBeginY)
         map[boxBeginY][boxBeginX] = "X"
     }
+    // 上一关
+    @objc func lastLevel() {
+        if (mapManager.currentIndex <= 0) {
+            return
+        }
+        resetLevel(index: mapManager.currentIndex-1)
+    }
+    // 下一关
+    @objc func nextLevel() {
+        if (mapManager.currentIndex >= mapManager.count) {
+            return
+        }
+        resetLevel(index: mapManager.currentIndex+1)
+    }
+    // 重置为第几关
+    func resetLevel(index: Int) {
+        for v in view.subviews {
+            v.removeFromSuperview()
+        }
+        for v in container.subviews {
+            v.removeFromSuperview()
+        }
+        mapManager.currentIndex = index
+        setupUI()
+    }
     // 移动玩家与箱子
     func move(direction: Direction) {
         var x = heroX
@@ -266,10 +319,14 @@ class ViewController: UIViewController {
         // 判断箱子是否到达终点
         if hasEnd() {
             // 弹窗提示
-            let alert = UIAlertController(title: nil, message: "太棒啦！完成挑战了🎉🎉", preferredStyle: .alert)
+            let alert = UIAlertController(title: nil, message: "太棒啦！通过第\(mapManager.currentIndex+1)关🎉🎉", preferredStyle: .alert)
             let confirmAction = UIAlertAction(title: "确认", style: .default) { [weak self] _ in
                 guard let strongSelf = self else { return }
-                strongSelf.reset()
+                if strongSelf.mapManager.currentIndex+1 >= strongSelf.mapManager.count { // 如果已经到最后一关，返回第一关
+                    strongSelf.resetLevel(index: 0)
+                } else { // 否则，进入下一关
+                    strongSelf.nextLevel()
+                }
             }
             alert.addAction(confirmAction)
             self.present(alert, animated: true, completion: nil)
