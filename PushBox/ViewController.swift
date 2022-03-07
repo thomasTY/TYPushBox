@@ -109,7 +109,7 @@ class ViewController: UIViewController {
     var boxY:Int = 0 // 箱子当前y下标
     var exitX:Int = 0 // 终点x下标
     var exitY:Int = 0 // 终点y下标
-    let mapManager = MapManager()
+    let mapManager = MapManager() // 地图管理器
     var map = [[String]]() // 当前地图
     
     override func viewDidLoad() {
