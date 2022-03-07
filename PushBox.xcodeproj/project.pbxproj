@@ -96,6 +96,7 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1320;
+				ORGANIZATIONNAME = TYOU;
 				TargetAttributes = {
 					B4039A3C27D49D8F00844A2D = {
 						CreatedOnToolsVersion = 13.2.1;

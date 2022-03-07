@@ -2,8 +2,8 @@
 //  ViewController.swift
 //  PushBox
 //
-//  Created by chentianyou on 2022/3/6.
-// 推箱子游戏-swift实现
+//  Created by TYOU on 2022/3/6.
+// 推箱子游戏-控制器
 
 import UIKit
 
@@ -165,7 +165,7 @@ class ViewController: UIViewController {
                 } else if item == "0" { // 添加玩家
                     heroBeginX = j
                     heroBeginY = i
-                    updateHeroFrame(xIndex: j, yIndex:j)
+                    updateHeroFrame(xIndex: j, yIndex:i)
                     container.addSubview(hero)
                 }
             }
